@@ -1,13 +1,10 @@
-package com.dataartschool.newsportal.persistence.repository.entity;
+package com.dataartschool.newsportal.persistence.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -21,6 +18,6 @@ public class NewsSectionEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "section")
+    @OneToMany(mappedBy = "section", cascade = CascadeType.DETACH)
     private Collection<NewsEntity> news;
 }

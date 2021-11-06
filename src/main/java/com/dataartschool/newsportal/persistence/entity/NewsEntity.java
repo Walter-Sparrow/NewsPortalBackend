@@ -1,6 +1,7 @@
-package com.dataartschool.newsportal.persistence.repository.entity;
+package com.dataartschool.newsportal.persistence.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsEntity {
@@ -21,6 +23,8 @@ public class NewsEntity {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private String innerText;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     private NewsSectionEntity section;
 }
