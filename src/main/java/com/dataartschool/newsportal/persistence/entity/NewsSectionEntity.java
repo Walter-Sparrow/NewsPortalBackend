@@ -12,6 +12,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsSectionEntity {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -20,4 +21,5 @@ public class NewsSectionEntity {
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.DETACH)
     private Collection<NewsEntity> news;
+
 }

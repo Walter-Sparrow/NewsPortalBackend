@@ -13,6 +13,7 @@ import java.util.List;
 @RequestMapping("/news")
 @RequiredArgsConstructor
 public class NewsController {
+
     private final NewsService newsService;
 
     @GetMapping
@@ -31,4 +32,5 @@ public class NewsController {
                 .status(HttpStatus.CREATED)
                 .body(newsService.addNews(newsDto));
     }
+
 }

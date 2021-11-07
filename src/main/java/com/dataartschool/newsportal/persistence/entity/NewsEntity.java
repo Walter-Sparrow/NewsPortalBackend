@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsEntity {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -27,4 +28,5 @@ public class NewsEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private NewsSectionEntity section;
+
 }

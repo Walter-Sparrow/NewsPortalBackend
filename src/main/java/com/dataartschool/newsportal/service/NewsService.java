@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class NewsService {
+
     private final NewsRepository newsRepository;
     private final NewsSectionRepository newsSectionRepository;
 
@@ -50,4 +51,5 @@ public class NewsService {
         return newsRepository.findById(id)
                 .orElseThrow(()->new NoNewsFound("No news with this ID was found"));
     }
+
 }
