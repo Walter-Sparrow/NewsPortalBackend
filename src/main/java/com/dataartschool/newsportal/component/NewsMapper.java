@@ -2,6 +2,7 @@ package com.dataartschool.newsportal.component;
 
 import com.dataartschool.newsportal.controller.dto.NewsCreateRequestDto;
 import com.dataartschool.newsportal.controller.dto.NewsDto;
+import com.dataartschool.newsportal.controller.dto.NewsSectionDto;
 import com.dataartschool.newsportal.exception.NoNewsSectionFound;
 import com.dataartschool.newsportal.persistence.entity.NewsEntity;
 import com.dataartschool.newsportal.persistence.entity.NewsSectionEntity;
@@ -21,7 +22,7 @@ public class NewsMapper {
                 .email(entity.getEmail())
                 .innerText(entity.getInnerText())
                 .title(entity.getTitle())
-                .sectionName(entity.getSection().getName())
+                .section(new NewsSectionDto(entity.getSection().getId(), entity.getSection().getName()))
                 .build();
     }
 
