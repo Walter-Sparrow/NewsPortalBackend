@@ -1,7 +1,7 @@
 package com.dataartschool.newsportal.controller;
 
 import com.dataartschool.newsportal.controller.dto.ErrorDto;
-import com.dataartschool.newsportal.exception.NewsAlreadyExists;
+import com.dataartschool.newsportal.exception.NoNewsSectionFound;
 import com.dataartschool.newsportal.exception.NoNewsFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,10 +26,10 @@ public class ControllerExceptionHandler {
         return new ErrorDto(e.getMessage());
     }
 
-    @ExceptionHandler(NewsAlreadyExists.class)
-    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ExceptionHandler(NoNewsSectionFound.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorDto handleUserAlreadyExistsException(NewsAlreadyExists e) {
+    public ErrorDto handleUserAlreadyExistsException(NoNewsSectionFound e) {
         return new ErrorDto(e.getMessage());
     }
 

@@ -1,27 +1,33 @@
 package com.dataartschool.newsportal.controller.dto;
 
-import com.dataartschool.newsportal.persistence.entity.NewsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewsDto {
+public class NewsCreateRequestDto {
 
-    private Long id;
-
+    @NotBlank
     private String author;
 
+    @Email
     private String email;
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String innerText;
 
-    private String sectionName;
+    @Positive
+    private Long sectionId;
 
 }
