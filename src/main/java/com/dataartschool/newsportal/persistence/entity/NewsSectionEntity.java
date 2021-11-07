@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,6 +21,6 @@ public class NewsSectionEntity {
     private String name;
 
     @OneToMany(mappedBy = "section", cascade = CascadeType.DETACH)
-    private Collection<NewsEntity> news;
+    private List<NewsEntity> news;
 
 }
