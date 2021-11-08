@@ -2,9 +2,11 @@ package com.dataartschool.newsportal.controller;
 
 import com.dataartschool.newsportal.component.NewsModelAssembler;
 import com.dataartschool.newsportal.controller.dto.NewsCreateRequestDto;
+import com.dataartschool.newsportal.controller.dto.NewsDto;
 import com.dataartschool.newsportal.controller.dto.PageDto;
 import com.dataartschool.newsportal.service.NewsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,14 @@ public class NewsController {
     private final NewsModelAssembler newsModelAssembler;
 
     @GetMapping
-    public ResponseEntity<?> fetchAllNews(PageDto pageDto) {
+    public ResponseEntity<?> fetchAllNews(@RequestParam(value = "section_id", required = false) Long id, PageDto pageDto) {
+        Page<?> newsDtos = id == null
+                ? newsService.fetchAll(pageDto).map(newsModelAssembler::toModel)
+                : newsService.getAllBySectionId(id, pageDto).map(newsModelAssembler::toModel);
+
         return ResponseEntity.ok(
-                EntityModel.of(newsService.fetchAll(pageDto).map(newsModelAssembler::toModel),
-                        linkTo(methodOn(NewsController.class)).withSelfRel())
+                EntityModel.of(newsDtos,
+                        linkTo(methodOn(NewsController.class).fetchAllNews(id, pageDto)).withSelfRel())
         );
     }
 
@@ -41,14 +47,6 @@ public class NewsController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(newsModelAssembler.toModel(newsService.add(dto)));
-    }
-
-    @GetMapping("/section/{id}")
-    public ResponseEntity<?> getAllBySectionId(@PathVariable("id") Long id, PageDto pageDto) {
-        return ResponseEntity.ok(
-                EntityModel.of(newsService.getAllBySectionId(id, pageDto).map(newsModelAssembler::toModel),
-                        linkTo(methodOn(NewsController.class).getAllBySectionId(id, pageDto)).withSelfRel())
-        );
     }
 
 }
