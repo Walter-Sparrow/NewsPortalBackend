@@ -31,7 +31,7 @@ public class NewsEntity {
     @NonNull
     private String innerText;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private NewsSectionEntity section;
 
 }

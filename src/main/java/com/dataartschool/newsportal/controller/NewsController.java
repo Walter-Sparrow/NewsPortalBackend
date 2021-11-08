@@ -3,18 +3,14 @@ package com.dataartschool.newsportal.controller;
 import com.dataartschool.newsportal.component.NewsModelAssembler;
 import com.dataartschool.newsportal.controller.dto.NewsCreateRequestDto;
 import com.dataartschool.newsportal.controller.dto.PageDto;
-import com.dataartschool.newsportal.persistence.repository.NewsSectionRepository;
 import com.dataartschool.newsportal.service.NewsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -48,13 +44,10 @@ public class NewsController {
     }
 
     @GetMapping("/section/{id}")
-    public ResponseEntity<?> getAllBySectionId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getAllBySectionId(@PathVariable("id") Long id, PageDto pageDto) {
         return ResponseEntity.ok(
-                CollectionModel.of(
-                        newsService.getAllBySectionId(id).stream()
-                            .map(newsModelAssembler::toModel)
-                            .collect(Collectors.toSet()),
-                        linkTo(methodOn(NewsController.class).getAllBySectionId(id)).withSelfRel())
+                EntityModel.of(newsService.getAllBySectionId(id, pageDto).map(newsModelAssembler::toModel),
+                        linkTo(methodOn(NewsController.class).getAllBySectionId(id, pageDto)).withSelfRel())
         );
     }
 
