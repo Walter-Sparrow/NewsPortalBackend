@@ -16,12 +16,6 @@ import javax.validation.constraints.Positive;
 public class NewsCreateRequestDto {
 
     @NotBlank
-    private String author;
-
-    @Email
-    private String email;
-
-    @NotBlank
     private String title;
 
     @NotBlank

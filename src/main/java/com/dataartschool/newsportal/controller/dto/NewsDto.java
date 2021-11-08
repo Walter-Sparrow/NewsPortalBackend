@@ -13,10 +13,6 @@ public class NewsDto {
 
     private Long id;
 
-    private String author;
-
-    private String email;
-
     private String title;
 
     private String innerText;

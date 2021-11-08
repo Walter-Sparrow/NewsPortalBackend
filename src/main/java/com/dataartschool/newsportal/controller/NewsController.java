@@ -2,7 +2,6 @@ package com.dataartschool.newsportal.controller;
 
 import com.dataartschool.newsportal.component.NewsModelAssembler;
 import com.dataartschool.newsportal.controller.dto.NewsCreateRequestDto;
-import com.dataartschool.newsportal.controller.dto.NewsDto;
 import com.dataartschool.newsportal.controller.dto.PageDto;
 import com.dataartschool.newsportal.service.NewsService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -43,10 +43,10 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNews(@Valid @RequestBody NewsCreateRequestDto dto) {
+    public ResponseEntity<?> addNews(@RequestParam("file") MultipartFile file, @RequestParam("section_id") Long sectionId) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(newsModelAssembler.toModel(newsService.add(dto)));
+                .body(newsModelAssembler.toModel(newsService.add(file, sectionId)));
     }
 
 }

@@ -20,11 +20,6 @@ public class NewsEntity {
     private Long id;
 
     @NonNull
-    private String author;
-
-    private String email;
-
-    @NonNull
     private String title;
 
     @Lob

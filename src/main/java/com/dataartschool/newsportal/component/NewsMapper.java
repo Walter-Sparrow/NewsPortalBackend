@@ -18,24 +18,20 @@ public class NewsMapper {
     public NewsDto toDto(NewsEntity entity) {
         return NewsDto.builder()
                 .id(entity.getId())
-                .author(entity.getAuthor())
-                .email(entity.getEmail())
                 .innerText(entity.getInnerText())
                 .title(entity.getTitle())
                 .section(new NewsSectionDto(entity.getSection().getId(), entity.getSection().getName()))
                 .build();
     }
 
-    public NewsEntity fromCreateRequestDtoToEntity(NewsCreateRequestDto dto) {
-        NewsSectionEntity sectionEntity = newsSectionRepository.findById(dto.getSectionId())
+    public NewsEntity fromCreateRequestToEntity(String title, String innerText, Long sectionId) {
+        NewsSectionEntity sectionEntity = newsSectionRepository.findById(sectionId)
                 .orElseThrow(() -> new NoNewsSectionFound("No news section with this ID was found"));
 
         return NewsEntity.builder()
-                .title(dto.getTitle())
-                .innerText(dto.getInnerText())
+                .title(title)
+                .innerText(innerText)
                 .section(sectionEntity)
-                .author(dto.getAuthor())
-                .email(dto.getEmail())
                 .build();
     }
 
