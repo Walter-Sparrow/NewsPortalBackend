@@ -1,6 +1,7 @@
 package com.dataartschool.newsportal.service;
 
 import com.dataartschool.newsportal.component.NewsMapper;
+import com.dataartschool.newsportal.controller.dto.NewsCreateRequestDto;
 import com.dataartschool.newsportal.controller.dto.NewsDto;
 import com.dataartschool.newsportal.controller.dto.PageDto;
 import com.dataartschool.newsportal.exception.*;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -36,44 +39,53 @@ public class NewsService {
     }
 
     public NewsDto add(MultipartFile file, Long sectionId) {
-        try(InputStream inputStream = file.getInputStream()) {
+        if (file.getContentType() == null || !file.getContentType().contains("zip"))
+            throw new NotAcceptableFileReceived("File is not a zip");
 
+        try(InputStream inputStream = file.getInputStream()) {
             try (ZipInputStream zipInputStream = new ZipInputStream(inputStream)) {
                 ZipEntry entry = zipInputStream.getNextEntry();
                 if (entry == null)
                     throw new ZipIsEmpty("The received zip file is empty");
 
-                String title;
-                String innerText;
-                Scanner scanner;
+                NewsCreateRequestDto dto;
                 do {
-                    if (!entry.getName().equals("article.txt"))
-                        throw new UnexpectedFileInZip("Unsupported file in the received zip file");
-
-                        scanner = new Scanner(zipInputStream);
-                        if (!scanner.hasNext())
-                            throw new NoTitleInArticleFileFound("No title in article.txt");
-                        title = scanner.nextLine();
-
-                        if (!scanner.hasNext())
-                            throw new NoInnerTextInArticleFileFound("No inner text in article.txt");
-
-                        StringBuilder stringBuilder = new StringBuilder();
-                        stringBuilder.append(scanner.nextLine());
-                        do {
-                            stringBuilder.append(System.lineSeparator());
-                            stringBuilder.append(scanner.nextLine());
-                        } while (scanner.hasNext());
-                        innerText = stringBuilder.toString();
+                    dto = ExtractCreationRequestDtoFromZipEntry(zipInputStream, entry);
                 } while ((entry = zipInputStream.getNextEntry()) != null);
-                NewsEntity newsEntity = newsMapper.fromCreateRequestToEntity(title, innerText, sectionId);
+
+                dto.setSectionId(sectionId);
+                NewsEntity newsEntity = newsMapper.fromCreateRequestDtoToEntity(dto);
                 return newsMapper.toDto(newsRepository.save(newsEntity));
             }
 
         }
         catch (IOException e) {
-            throw new NotAcceptableFileReceived("File is not a zip");
+            throw new NotAcceptableFileReceived("Invalid file received");
         }
+    }
+
+    private NewsCreateRequestDto ExtractCreationRequestDtoFromZipEntry(ZipInputStream zipInputStream, ZipEntry entry) {
+        Scanner scanner;
+        NewsCreateRequestDto dto = new NewsCreateRequestDto();
+        if (!entry.getName().equals("article.txt"))
+            throw new UnexpectedFileInZip("Unsupported file in the received zip file");
+
+        scanner = new Scanner(zipInputStream);
+        if (!scanner.hasNext())
+            throw new NoTitleInArticleFileFound("No title in article.txt");
+        dto.setTitle(scanner.nextLine());
+
+        if (!scanner.hasNext())
+            throw new NoInnerTextInArticleFileFound("No inner text in article.txt");
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(scanner.nextLine());
+        do {
+            stringBuilder.append(System.lineSeparator());
+            stringBuilder.append(scanner.nextLine());
+        } while (scanner.hasNext());
+        dto.setInnerText(stringBuilder.toString());
+        return dto;
     }
 
     public Page<NewsDto> getAllBySectionId(Long id, PageDto pageDto) {

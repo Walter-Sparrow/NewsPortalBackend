@@ -24,13 +24,13 @@ public class NewsMapper {
                 .build();
     }
 
-    public NewsEntity fromCreateRequestToEntity(String title, String innerText, Long sectionId) {
-        NewsSectionEntity sectionEntity = newsSectionRepository.findById(sectionId)
+    public NewsEntity fromCreateRequestDtoToEntity(NewsCreateRequestDto dto) {
+        NewsSectionEntity sectionEntity = newsSectionRepository.findById(dto.getSectionId())
                 .orElseThrow(() -> new NoNewsSectionFound("No news section with this ID was found"));
 
         return NewsEntity.builder()
-                .title(title)
-                .innerText(innerText)
+                .title(dto.getTitle())
+                .innerText(dto.getInnerText())
                 .section(sectionEntity)
                 .build();
     }
