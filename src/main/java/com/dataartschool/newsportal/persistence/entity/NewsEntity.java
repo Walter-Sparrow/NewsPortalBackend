@@ -1,26 +1,32 @@
-package com.dataartschool.newsportal.persistence.repository.entity;
+package com.dataartschool.newsportal.persistence.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsEntity {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String author;
-
-    private String email;
-
+    @NonNull
     private String title;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Lob
+    @NonNull
+    private String innerText;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private NewsSectionEntity section;
+
 }
