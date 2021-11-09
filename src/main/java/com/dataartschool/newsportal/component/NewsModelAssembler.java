@@ -18,6 +18,6 @@ public class NewsModelAssembler implements RepresentationModelAssembler<NewsDto,
 
         return EntityModel.of(newsDto,
                 linkTo(methodOn(NewsController.class).getById(newsDto.getId())).withSelfRel(),
-                linkTo(methodOn(NewsController.class).fetchAllNews(null, new PageDto())).withRel("news"));
+                linkTo(methodOn(NewsController.class).fetchAll(null, new PageDto())).withRel("news"));
     }
 }
